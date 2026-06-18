@@ -10,11 +10,24 @@ namespace DeliveryRushExam.UI
         [SerializeField] private float moveSpeed = 55f;
 
         private float age;
+        private PopupPool pool;
+        
+        public void SetPool(PopupPool popupPool)
+        {
+            pool = popupPool;
+        }
 
         public void Setup(string message)
         {
             age = 0f;
+            transform.localPosition = Vector3.zero;
             messageText.text = message;
+            CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = 1f;
+            }
         }
 
         private void Update()
@@ -30,7 +43,14 @@ namespace DeliveryRushExam.UI
 
             if (age >= lifetime)
             {
-                Destroy(gameObject);
+                if (pool != null)
+                {
+                    pool.Return(this);
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
     }

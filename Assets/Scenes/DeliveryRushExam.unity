@@ -798,6 +798,7 @@ GameObject:
   - component: {fileID: 758901908}
   - component: {fileID: 758901907}
   - component: {fileID: 758901906}
+  - component: {fileID: 758901913}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -826,8 +827,7 @@ MonoBehaviour:
   ordersCountText: {fileID: 1709427788}
   ordersContainer: {fileID: 928513614}
   orderButtonPrefab: {fileID: 657774666}
-  popupsContainer: {fileID: 1922528519}
-  scorePopupPrefab: {fileID: 14142583}
+  popupPool: {fileID: 1450816041}
   gameplayPanel: {fileID: 727941080}
   resultsPanel: {fileID: 984154977}
   resultsText: {fileID: 477207602}
@@ -920,6 +920,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &758901913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758901905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6ee4f0dd1f7b4e85b2d7270d9924248, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeliveryRushExam.Save.SaveServicesInstaller
+  saveMode: 1
 --- !u!1 &784831737
 GameObject:
   m_ObjectHideFlags: 0
@@ -1799,6 +1812,53 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1450816039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1450816040}
+  - component: {fileID: 1450816041}
+  m_Layer: 0
+  m_Name: PopupPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1450816040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450816039}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -392.6801, y: 51.06368, z: 0}
+  m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1922528519}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1450816041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450816039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10227968b51ad2e4e9b3bba6efa05421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeliveryRushExam.UI.PopupPool
+  popupPrefab: {fileID: 14142583}
+  parent: {fileID: 1922528519}
+  initialSize: 10
 --- !u!1 &1531938924
 GameObject:
   m_ObjectHideFlags: 0
@@ -2454,6 +2514,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1450816040}
   - {fileID: 14142584}
   m_Father: {fileID: 727941081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
