@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DeliveryRushExam.Data;
+using DeliveryRushExam.UGS;
 using UnityEngine;
 
 namespace DeliveryRushExam.Save
@@ -15,27 +16,40 @@ namespace DeliveryRushExam.Save
 
         private async void Awake()
         {
-            saveService = ResolveSaveService();
+            saveService = ServiceLocator.Get<ISaveService>();
+            await WaitForCloudInitializationIfNeeded();
             await LoadProgressAsync();
         }
-        private ISaveService ResolveSaveService()
+        private async Task WaitForCloudInitializationIfNeeded()
         {
-            if (ServiceLocator.TryGet<ISaveService>(
-                    out ISaveService service))
+            if (!(saveService is UgsCloudSaveService))
             {
-                return service;
+                return;
             }
 
-            Debug.LogWarning(
-                "ISaveService not registered. Falling back to LocalSaveService.");
+            UgsInitializer initializer =
+                FindFirstObjectByType<UgsInitializer>();
 
-            return new LocalSaveService();
+            if (initializer == null)
+            {
+                Debug.LogError(
+                    "[SaveManager] UgsInitializer not found.");
+
+                return;
+            }
+
+            while (!initializer.IsReady)
+            {
+                await Task.Yield();
+            }
         }
 
         public async Task LoadProgressAsync()
         {
+            Debug.Log("[SaveManager] Loading Progress...");
+            
             CurrentProgress = await saveService.LoadAsync();
-            ProgressLoaded?.Invoke(CurrentProgress);
+            
             Debug.Log(
                 $"[SaveManager] Progress Loaded | " +
                 $"BestScore:{CurrentProgress.bestScore} | " +
@@ -43,6 +57,8 @@ namespace DeliveryRushExam.Save
                 $"CompletedOrders:{CurrentProgress.completedOrders} | " +
                 $"UnlockedLevel:{CurrentProgress.unlockedLevel} | " +
                 $"LastSaveDate:{CurrentProgress.lastSaveDate}");
+            
+            ProgressLoaded?.Invoke(CurrentProgress);
         }
 
         public async Task SaveMatchResultAsync(int score, int coins, int completedOrders)
