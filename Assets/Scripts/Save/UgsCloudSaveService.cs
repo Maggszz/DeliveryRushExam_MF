@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DeliveryRushExam.Save
 {
-    public class UgsCloudSaveService
+    public class UgsCloudSaveService : ISaveService
     {
         private const string ProgressKey = "delivery_rush_progress";
 
@@ -21,4 +21,4 @@ namespace DeliveryRushExam.Save
             await Task.Yield();
         }
     }
-}
+}   
