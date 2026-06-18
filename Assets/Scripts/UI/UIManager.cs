@@ -32,6 +32,11 @@ namespace DeliveryRushExam.UI
         [SerializeField] private GameObject gameplayPanel;
         [SerializeField] private GameObject resultsPanel;
         [SerializeField] private TMP_Text resultsText;
+        
+        private int lastScore = -1;
+        private int lastCoins = -1;
+        private int lastOrdersCount = -1;
+        private int lastTime = -1;
 
         private readonly List<OrderButtonView> orderViews = new List<OrderButtonView>();
 
@@ -79,20 +84,48 @@ namespace DeliveryRushExam.UI
                 return;
             }
 
-            scoreText.text = "Score: " + scoreManager.Score;
-            coinsText.text = "Coins: " + scoreManager.Coins;
-            timerText.text = "Time: " + Mathf.CeilToInt(gameManager.RemainingTime);
-            ordersCountText.text = "Orders: " + orderManager.ActiveOrders.Count;
-
-            for (int i = 0; i < orderViews.Count; i++)
+            if (scoreManager.Score != lastScore)
             {
-                orderViews[i].Refresh();
+                lastScore = scoreManager.Score;
+
+                scoreText.text =
+                    "Score: " + lastScore;
             }
 
-            Canvas canvas = GetComponentInParent<Canvas>();
-            if (canvas != null && ordersContainer != null)
+            if (scoreManager.Coins != lastCoins)
             {
-                LayoutRebuilder.ForceRebuildLayoutImmediate(ordersContainer);
+                lastCoins = scoreManager.Coins;
+
+                coinsText.text =
+                    "Coins: " + lastCoins;
+            }
+
+            int currentTime =
+                Mathf.CeilToInt(
+                    gameManager.RemainingTime);
+
+            if (currentTime != lastTime)
+            {
+                lastTime = currentTime;
+
+                timerText.text =
+                    "Time: " + currentTime;
+
+                for (int i = 0; i < orderViews.Count; i++)
+                {
+                    orderViews[i].Refresh();
+                }
+            }
+
+            int ordersCount =
+                orderManager.ActiveOrders.Count;
+
+            if (ordersCount != lastOrdersCount)
+            {
+                lastOrdersCount = ordersCount;
+
+                ordersCountText.text =
+                    "Orders: " + ordersCount;
             }
         }
 

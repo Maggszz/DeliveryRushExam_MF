@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DeliveryRushExam.Data;
 using UnityEngine;
 
@@ -55,17 +54,22 @@ namespace DeliveryRushExam.Core
                 activeOrders[i].remainingTime -= Time.deltaTime;
             }
             
-            int expiredCount = activeOrders.Where(order => order.remainingTime <= 0f).Count();
-            if (expiredCount > 0)
+            bool removedAny = false;
+
+            for (int i = activeOrders.Count - 1; i >= 0; i--)
             {
-                activeOrders.RemoveAll(order => order.remainingTime <= 0f);
-                OrdersChanged?.Invoke();
+                if (activeOrders[i].remainingTime <= 0f)
+                {
+                    activeOrders.RemoveAt(i);
+                    removedAny = true;
+                }
             }
 
-            if (verboseLogs)
+            if (removedAny)
             {
-                Debug.Log("Active orders: " + activeOrders.Count + " expired: " + expiredCount);
+                OrdersChanged?.Invoke();
             }
+            
         }
 
         public void StartOrders()
@@ -86,15 +90,23 @@ namespace DeliveryRushExam.Core
 
         public void CompleteOrder(string orderId)
         {
-            OrderData order = activeOrders.FirstOrDefault(activeOrder => activeOrder.id == orderId);
-            if (order == null)
+            for (int i = 0; i < activeOrders.Count; i++)
             {
+                if (activeOrders[i].id != orderId)
+                {
+                    continue;
+                }
+
+                OrderData order = activeOrders[i];
+
+                activeOrders.RemoveAt(i);
+
+                scoreManager.AddCompletedOrder(order);
+
+                OrdersChanged?.Invoke();
+
                 return;
             }
-
-            activeOrders.Remove(order);
-            scoreManager.AddCompletedOrder(order);
-            OrdersChanged?.Invoke();
         }
 
         private void TrySpawnOrder()
